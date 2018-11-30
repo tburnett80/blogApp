@@ -1,0 +1,8 @@
+FROM golang:1.11.2-nanoserver-sac2016
+WORKDIR /temp
+EXPOSE 9000
+RUN mkdir cache_root
+ADD https://dl.minio.io/server/minio/release/windows-amd64/minio.exe c:/temp/minio.exe
+ENTRYPOINT C:\temp\minio.exe server c:\temp\cache_root
+
+
