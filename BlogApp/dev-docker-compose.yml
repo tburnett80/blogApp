@@ -22,7 +22,7 @@ services:
      ports:
         - "6379:6379"
    blobs:
-     image: minio
+     image: minio/minio
      container_name: blobs
      restart: always
      ports:
