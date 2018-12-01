@@ -2,7 +2,7 @@
 version: '3.3'
 
 services:
-   db:
+   db1:
      image: postgres:11-alpine
      container_name: pg1
      restart: always
@@ -15,3 +15,11 @@ services:
        PGDATA: '/var/lib/postgresql/data/pdata/volume'
      volumes:
        - /tmp/blog/pgdata:/var/lib/postgresql/data/pdata
+    admin:
+      image: adminer
+      container_name: admin
+      restart: always
+      ports:
+         - "8080:8080"
+      depends_on:
+       - db
