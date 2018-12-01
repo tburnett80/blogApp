@@ -3,14 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Server", "BlogApp.Server\BlogApp.Server.csproj", "{223BAB0B-108D-4A7B-B294-8315DB717D15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Server", "BlogApp.Server\BlogApp.Server.csproj", "{223BAB0B-108D-4A7B-B294-8315DB717D15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Client", "BlogApp.Client\BlogApp.Client.csproj", "{7D989356-2098-4D95-A1DB-D79C07E5192E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Client", "BlogApp.Client\BlogApp.Client.csproj", "{7D989356-2098-4D95-A1DB-D79C07E5192E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Shared", "BlogApp.Shared\BlogApp.Shared.csproj", "{4EC7639F-0E70-46B2-BB19-3C7953E450F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Shared", "BlogApp.Shared\BlogApp.Shared.csproj", "{4EC7639F-0E70-46B2-BB19-3C7953E450F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B6F6793C-0B03-4210-A557-0F4554DDE12C}"
 	ProjectSection(SolutionItems) = preProject
+		dev-docker-compose.yml = dev-docker-compose.yml
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
