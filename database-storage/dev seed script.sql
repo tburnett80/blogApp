@@ -19,8 +19,8 @@ CREATE TABLE post_body (
 
 CREATE TABLE post_header (
     id INT GENERATED ALWAYS AS IDENTITY,
-    post_title VARCHAR(254) NOT NULL,
 	post_body_id INT NOT NULL REFERENCES post_body(id),
+    post_title VARCHAR(254) NOT NULL,
 	PRIMARY KEY (id),
 	UNIQUE(post_title),
 	UNIQUE(post_body_id)
