@@ -39,6 +39,6 @@ services:
         MINIO_ACCESS_KEY: 'abc'
         MINIO_SECRET_KEY: 'abc123def'
      volumes:
-       - /tmp/blog/blobs:/data/cache
-     command: server --config-dir /data cache
+       - /tmp/blog/blobs:/data
+     command: server /data
     
