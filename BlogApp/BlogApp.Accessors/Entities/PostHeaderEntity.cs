@@ -13,5 +13,7 @@ namespace BlogApp.Accessors.Entities
         public string Title { get; set; }
 
         public virtual PostBodyEntity Body { get; set; }
+
+        public virtual ICollection<PostTagEntity> PostTags { get; set; }
     }
 }
