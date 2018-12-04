@@ -7,6 +7,6 @@ namespace BlogApp.Accessors.Entities
 
         public string Markdown { get; set; }
 
-        public virtual PostHeaderEntity Header { get; set; }
+        //public virtual PostHeaderEntity Header { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace BlogApp.Accessors.EF.mappings
                 .WithMany()
                 .HasForeignKey(e => e.BodyId);
 
-
+            
         }
     }
 }

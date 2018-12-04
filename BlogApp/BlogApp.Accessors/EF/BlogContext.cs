@@ -16,15 +16,17 @@ namespace BlogApp.Accessors.EF
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new TagEntityMapping());
-            //modelBuilder.ApplyConfiguration(new PostBodyEntityMapping());
-            //modelBuilder.ApplyConfiguration(new PostHeaderEntityMapping());
-            //modelBuilder.ApplyConfiguration(new PostTagEntityMapping());
+            modelBuilder.ApplyConfiguration(new PostBodyEntityMapping());
+            modelBuilder.ApplyConfiguration(new PostHeaderEntityMapping());
+            modelBuilder.ApplyConfiguration(new PostTagEntityMapping());
         }
 
         internal DbSet<TagEntity> Tags { get; set; }
 
-        //internal DbSet<PostBodyEntity> Bodies { get; set; }
+        internal DbSet<PostBodyEntity> Bodies { get; set; }
 
-        //internal DbSet<PostHeaderEntity> Headers { get; set; }
+        internal DbSet<PostHeaderEntity> Headers { get; set; }
+
+        internal DbSet<PostTagEntity> PostTags { get; set; }
     }
 }
