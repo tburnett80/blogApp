@@ -20,11 +20,11 @@ namespace BlogApp.Accessors.EF.mappings
                 .IsRequired();
 
             builder.HasOne(e => e.Tag)
-                .WithMany()
+                .WithMany(e => e.PostTags)
                 .HasForeignKey(e => e.TagId);
 
             builder.HasOne(e => e.Post)
-                .WithMany()
+                .WithMany(e => e.PostTags)
                 .HasForeignKey(e => e.PostId);
         }
     }

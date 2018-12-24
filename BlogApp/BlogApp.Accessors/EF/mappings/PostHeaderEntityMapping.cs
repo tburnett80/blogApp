@@ -29,7 +29,9 @@ namespace BlogApp.Accessors.EF.mappings
                 .WithMany()
                 .HasForeignKey(e => e.BodyId);
 
-            
+            builder.HasMany(e => e.PostTags)
+                .WithOne(e => e.Post)
+                .HasForeignKey(e => e.PostId);
         }
     }
 }
