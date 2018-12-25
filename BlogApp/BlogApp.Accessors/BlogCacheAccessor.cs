@@ -21,7 +21,7 @@ namespace BlogApp.Accessors
             _connectionMultiplexer = ConnectionMultiplexer.Connect(_config["redis:endpoint"]);
         }
 
-        public BlogCacheAccessor(IConfiguration config, IConnectionMultiplexer multiplexer)
+        internal BlogCacheAccessor(IConfiguration config, IConnectionMultiplexer multiplexer)
         {
             _config = config
                 ?? throw new ArgumentNullException(nameof(config));
