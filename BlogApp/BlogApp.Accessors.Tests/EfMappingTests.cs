@@ -12,15 +12,22 @@ namespace BlogApp.Accessors.Tests
     [TestClass]
     public class EfMappingTests
     {
+        private static DbContextOptions opts;
+
+        [ClassInitialize]
+        public static void init(TestContext ctx)
+        {
+            var serverIp = "192.168.1.1";//"10.200.7.50";
+            opts = new DbContextOptionsBuilder()
+                .UseNpgsql($"Server={serverIp};Port=5432;Database=blog;User Id=user1;Password=password1;")
+                .Options;
+        }
+
         [TestMethod]
         [TestCategory("Integration Test")]
         public async Task TestBlogMappings()
         {
-            var opts = new DbContextOptionsBuilder();
-            //10.200.7.50
-            opts.UseNpgsql("Server=10.200.7.50;Port=5432;Database=blog;User Id=user1;Password=password1;");
-
-            using (var ctx = new BlogContext(opts.Options))
+            using (var ctx = new BlogContext(opts))
             {
                 //var tags = await ctx.Tags.ToListAsync();
                 //var bodies = await ctx.Bodies.ToListAsync();
