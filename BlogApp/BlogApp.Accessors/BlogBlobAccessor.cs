@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -33,6 +34,20 @@ namespace BlogApp.Accessors
             return buckets.Buckets.Select(b => b.Name);
         }
 
+        public async Task<IEnumerable<string>> EnumerateBucket(string bucket)
+        {
+            if (!await _client.BucketExistsAsync(bucket))
+                return new string[0];
+
+            var blobNames = new List<string>();
+            var observable = _client.ListObjectsAsync(bucket);
+            using (observable.Subscribe(item => blobNames.Add(item.Key)))
+            {
+                await observable;
+                return blobNames.ToList();
+            }
+        }
+
         public async Task AddBlob(string bucketName, string blobName, byte[] blob, string mime = null)
         {
              await AddBlob(bucketName, blobName, new MemoryStream(blob), blob.Length, mime);
@@ -59,37 +74,26 @@ namespace BlogApp.Accessors
 
         public async Task<bool> DeleteBucket(string bucketName)
         {
-            if (await _client.BucketExistsAsync(bucketName))
+            if (!await _client.BucketExistsAsync(bucketName))
+                return false;
+
+            try
             {
                 //Clear items from bucket
-                try
-                {
-                    var item = await _client.ListObjectsAsync(bucketName);
-                    while (item != null)
-                    {
-                        await _client.RemoveObjectAsync(bucketName, item.Key);
-                        item = await _client.ListObjectsAsync(bucketName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message != "Sequence contains no elements.")
-                        return false;
-                }
-
-                try
-                {
-                    await _client.RemoveBucketAsync(bucketName);
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-
-                return true;
+                var items = await EnumerateBucket(bucketName);
+                //await _client.RemoveObjectAsync(bucketName, items);
+                foreach (var item in items)
+                    await _client.RemoveObjectAsync(bucketName, item);
+                
+                //remove bucket itself
+                await _client.RemoveBucketAsync(bucketName);
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }
