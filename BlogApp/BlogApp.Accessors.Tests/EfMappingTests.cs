@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BlogApp.Accessors.EF;
+using BlogApp.Accessors.Entities;
+using BlogApp.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,21 +12,39 @@ namespace BlogApp.Accessors.Tests
     [TestClass]
     public class EfMappingTests
     {
-        private static DbContextOptions opts;
+        private static DbContextOptions _opts;
 
         [ClassInitialize]
-        public static void init(TestContext ctx)
+        public static void Init(TestContext tctx)
         {
-            opts = new DbContextOptionsBuilder()
-                .UseNpgsql($"Server={TestConstants.Server};Port=5432;Database=blog;User Id=user1;Password=password1;")
+            _opts = new DbContextOptionsBuilder()
+                .UseNpgsql($"Server={TestConstants.Server};Port=5432;Database={Guid.NewGuid().ToString().Replace("-", "")};User Id=user1;Password=password1;")
                 .Options;
+
+            using (var ctx = new BlogContext(_opts))
+            {
+                ctx.Database.EnsureCreated();
+
+                //Add some tags
+
+                //
+            }
+        }
+
+        [ClassCleanup]
+        public static void TearDown()
+        {
+            using (var ctx = new BlogContext(_opts))
+            {
+                ctx.Database.EnsureDeleted();
+            }
         }
 
         [TestMethod]
         [TestCategory("Integration Test")]
         public async Task TestBlogMappings()
         {
-            using (var ctx = new BlogContext(opts))
+            using (var ctx = new BlogContext(_opts))
             {
                 //var tags = await ctx.Tags.ToListAsync();
                 //var bodies = await ctx.Bodies.ToListAsync();
