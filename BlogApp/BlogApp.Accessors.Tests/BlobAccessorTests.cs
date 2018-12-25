@@ -22,7 +22,7 @@ namespace BlogApp.Accessors.Tests
             BlobAccessorTests.cfg = new ConfigurationBuilder()
                 .AddInMemoryCollection(new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>("minio:endPoint","192.168.1.1:9000"),
+                    new KeyValuePair<string, string>("minio:endPoint",$"{TestConstants.Server}:9000"),
                     new KeyValuePair<string, string>("minio:accessKey","abc"),
                     new KeyValuePair<string, string>("minio:secretKey","abc123def"),
                 }).Build();

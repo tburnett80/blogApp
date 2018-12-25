@@ -12,9 +12,8 @@ namespace BlogApp.Accessors.Tests
         [ClassInitialize]
         public static void init(TestContext ctx)
         {
-            var serverIp = "192.168.1.1";//"10.200.7.50";
             opts = new DbContextOptionsBuilder()
-                .UseNpgsql($"Server={serverIp};Port=5432;Database=blog;User Id=user1;Password=password1;")
+                .UseNpgsql($"Server={TestConstants.Server};Port=5432;Database=blog;User Id=user1;Password=password1;")
                 .Options;
         }
 

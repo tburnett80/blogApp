@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,7 +21,7 @@ namespace BlogApp.Accessors.Tests
             _cfg = new ConfigurationBuilder()
                 .AddInMemoryCollection(new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>("redis:endpoint","192.168.1.1:6379"),
+                    new KeyValuePair<string, string>("redis:endpoint",$"{TestConstants.Server}:6379"),
                     new KeyValuePair<string, string>("redis:ttlMsDefault","7200000")
                 }).Build();
 
