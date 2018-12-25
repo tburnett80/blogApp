@@ -81,7 +81,6 @@ namespace BlogApp.Accessors
             {
                 //Clear items from bucket
                 var items = await EnumerateBucket(bucketName);
-                //await _client.RemoveObjectAsync(bucketName, items);
                 foreach (var item in items)
                     await _client.RemoveObjectAsync(bucketName, item);
                 
