@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using BlogApp.Accessors.EF;
 using BlogApp.Common.Models;
 using Microsoft.EntityFrameworkCore;
@@ -102,6 +103,79 @@ namespace BlogApp.Accessors.Tests
             //Assert
             Assert.IsNotNull(result, "Should never be null");
             Assert.IsTrue(result > 2, "Should have added header and body and two tags");
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Test")]
+        public async Task GetPostCountTest()
+        {
+            //Arrange
+            var post = new Post
+            {
+                Body = TestConstants.GuidString,
+                Header = new PostHeader
+                {
+                    Title = TestConstants.GuidString,
+                    Tags = new[]
+                    {
+                        new Tag
+                        {
+                            Text = TestConstants.GuidString
+                        },
+                        new Tag
+                        {
+                            Text = TestConstants.GuidString
+                        },
+                    }
+                }
+            };
+
+            var accessor = new BlogAccessor(_opts);
+            await accessor.AddPost(post);
+
+            //Act
+            var result = await accessor.GetPostCount();
+
+            //Assert
+            Assert.IsNotNull(result, "Should never be null");
+            Assert.IsTrue(result > 0, "Should at minimum have the post we just added");
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Test")]
+        public async Task GetPagedHeadersTest()
+        {
+            //Arrange
+            var accessor = new BlogAccessor(_opts);
+            for (var ndx = 0; ndx < 5; ndx++)
+            {
+                await accessor.AddPost(new Post
+                {
+                    Body = TestConstants.GuidString,
+                    Header = new PostHeader
+                    {
+                        Title = TestConstants.GuidString,
+                        Tags = new[]
+                        {
+                            new Tag
+                            {
+                                Text = TestConstants.GuidString
+                            },
+                            new Tag
+                            {
+                                Text = TestConstants.GuidString
+                            },
+                        }
+                    }
+                });
+            }
+
+            //Act
+            var result = await accessor.GetPostHeadersByPage(1, 2);
+
+            //Assert
+            Assert.IsNotNull(result, "Should never be null");
+            Assert.AreEqual(2, result.Count(), "Should contain 2 post headers from the second page");
         }
     }
 }
