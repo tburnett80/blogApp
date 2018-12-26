@@ -19,5 +19,21 @@ namespace BlogApp.Common.Contracts.Accessors
         /// <param name="pageSize">Number of items in a page</param>
         /// <returns></returns>
         Task<IEnumerable<PostHeader>> GetPostHeadersByPage(int pageNumber = 0, int pageSize = 10);
+
+        /// <summary>
+        /// Add an entire post object from Editor
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        Task<int> AddPost(Post dto);
+
+        /// <summary>
+        /// Will add tags that do not already exist
+        /// And lookup tags that match and do
+        /// then return a merged list
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        Task<IEnumerable<Tag>> AddTags(IEnumerable<Tag> tags);
     }
 }

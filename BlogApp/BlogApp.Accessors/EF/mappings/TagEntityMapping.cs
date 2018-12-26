@@ -20,6 +20,10 @@ namespace BlogApp.Accessors.EF.mappings
                 .HasMaxLength(64)
                 .IsUnicode()
                 .IsRequired();
+
+            builder.HasIndex(e => e.Text)
+                .HasName("IX_Tag_Name")
+                .IsUnique();
         }
     }
 }

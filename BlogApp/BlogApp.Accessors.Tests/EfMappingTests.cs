@@ -20,12 +20,12 @@ namespace BlogApp.Accessors.Tests
         public static void Init(TestContext tctx)
         {
             _opts = new DbContextOptionsBuilder()
-                .UseNpgsql($"Server={TestConstants.Server};Port=5432;Database={Guid.NewGuid().ToString().Replace("-", "")};User Id=user1;Password=password1;")
+                .UseNpgsql($"Server={TestConstants.Server};Port=5432;Database={TestConstants.GuidString};User Id=user1;Password=password1;")
                 .Options;
 
-            _testTag = $"{Guid.NewGuid().ToString().Replace("-", "")}";
-            _testTitle = $"{Guid.NewGuid().ToString().Replace("-", "")}";
-            _testBody = $"{Guid.NewGuid().ToString().Replace("-", "")}";
+            _testTag = TestConstants.GuidString;
+            _testTitle = TestConstants.GuidString;
+            _testBody = TestConstants.GuidString;
 
             using (var ctx = new BlogContext(_opts))
             {
