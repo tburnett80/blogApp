@@ -17,19 +17,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{E62DFCF7-A3DE-4EF0-8210-46514477DEFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.IoC", "BlogApp.IoC\BlogApp.IoC.csproj", "{F46B1F82-CEC2-4300-96E0-52374F0DDE3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.IoC", "BlogApp.IoC\BlogApp.IoC.csproj", "{F46B1F82-CEC2-4300-96E0-52374F0DDE3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Common", "BlogApp.Common\BlogApp.Common.csproj", "{87928781-A124-4C61-AAA1-F865E91C556F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Common", "BlogApp.Common\BlogApp.Common.csproj", "{87928781-A124-4C61-AAA1-F865E91C556F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Managers", "BlogApp.Managers\BlogApp.Managers.csproj", "{C5A5283D-8785-4F68-B5CA-599BCD3652D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Managers", "BlogApp.Managers\BlogApp.Managers.csproj", "{C5A5283D-8785-4F68-B5CA-599BCD3652D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Engines", "BlogApp.Engines\BlogApp.Engines.csproj", "{40085ABC-9172-40FA-8D00-C69E26DAA83C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Engines", "BlogApp.Engines\BlogApp.Engines.csproj", "{40085ABC-9172-40FA-8D00-C69E26DAA83C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Accessors", "BlogApp.Accessors\BlogApp.Accessors.csproj", "{EA2A806B-81CC-4A46-804E-FE260C161ACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Accessors", "BlogApp.Accessors\BlogApp.Accessors.csproj", "{EA2A806B-81CC-4A46-804E-FE260C161ACD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4828EB98-D1A2-48F9-8006-FE46A83DD08F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Accessors.Tests", "BlogApp.Accessors.Tests\BlogApp.Accessors.Tests.csproj", "{8DD60115-0053-4374-A186-A50243E70D0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogApp.Accessors.Tests", "BlogApp.Accessors.Tests\BlogApp.Accessors.Tests.csproj", "{8DD60115-0053-4374-A186-A50243E70D0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApp.Unit.Tests", "BlogApp.Unit.Tests\BlogApp.Unit.Tests.csproj", "{1A50C045-8997-494F-843D-E893FB3A3BCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{8DD60115-0053-4374-A186-A50243E70D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DD60115-0053-4374-A186-A50243E70D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DD60115-0053-4374-A186-A50243E70D0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A50C045-8997-494F-843D-E893FB3A3BCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A50C045-8997-494F-843D-E893FB3A3BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A50C045-8997-494F-843D-E893FB3A3BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A50C045-8997-494F-843D-E893FB3A3BCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{40085ABC-9172-40FA-8D00-C69E26DAA83C} = {E62DFCF7-A3DE-4EF0-8210-46514477DEFF}
 		{EA2A806B-81CC-4A46-804E-FE260C161ACD} = {E62DFCF7-A3DE-4EF0-8210-46514477DEFF}
 		{8DD60115-0053-4374-A186-A50243E70D0A} = {4828EB98-D1A2-48F9-8006-FE46A83DD08F}
+		{1A50C045-8997-494F-843D-E893FB3A3BCC} = {4828EB98-D1A2-48F9-8006-FE46A83DD08F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {653691AD-7353-4D41-97F6-388D0FD3F3F7}

@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\Engines\" />
     <Folder Include="Contracts\Managers\" />
   </ItemGroup>
 
