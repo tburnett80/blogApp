@@ -51,5 +51,17 @@ namespace BlogApp.Accessors.ModelConverters
                 Text = ent.Text
             };
         }
+
+        internal static Post Convert(this PostBodyEntity ent, PostHeaderEntity ent2)
+        {
+            if (ent == null || ent2 == null)
+                return null;
+
+            return new Post
+            {
+                Header = ent2.Convert(),
+                Body = ent.Markdown
+            };
+        }
     }
 }

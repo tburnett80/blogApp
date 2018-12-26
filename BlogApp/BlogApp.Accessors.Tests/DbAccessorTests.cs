@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using BlogApp.Accessors.EF;
+using BlogApp.Accessors.Entities;
 using BlogApp.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -176,6 +177,43 @@ namespace BlogApp.Accessors.Tests
             //Assert
             Assert.IsNotNull(result, "Should never be null");
             Assert.AreEqual(2, result.Count(), "Should contain 2 post headers from the second page");
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Test")]
+        public async Task GetPostTest()
+        {
+            //Arrange
+            var bodyId = -1;
+            var bodyText = TestConstants.GuidString;
+            using (var ctx = new BlogContext(_opts))
+            {
+                var tags = new []
+                {
+                    new PostTagEntity{ Tag = new TagEntity { Text = TestConstants.GuidString }},
+                    new PostTagEntity{ Tag = new TagEntity { Text = TestConstants.GuidString }}
+                };
+                var body = new PostBodyEntity { Markdown = bodyText };
+                var header = new PostHeaderEntity { Title = TestConstants.GuidString, Body = body };
+                foreach (var pt in tags)
+                    pt.Post = header;
+                
+                await ctx.Headers.AddAsync(header);
+                await ctx.SaveChangesAsync();
+
+                bodyId = body.Id;
+            }
+
+            var accessor = new BlogAccessor(_opts);
+
+            //Act
+            var result = await accessor.GetPostById(bodyId);
+
+            //Assert
+            Assert.IsTrue(bodyId > 0, "Should be at least 1");
+            Assert.IsNotNull(result, "Should never be null");
+            Assert.IsInstanceOfType(result, typeof(Post));
+            Assert.AreEqual(bodyText, result.Body, "Should contain the test body text");
         }
     }
 }

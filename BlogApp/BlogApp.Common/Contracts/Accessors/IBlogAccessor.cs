@@ -35,5 +35,12 @@ namespace BlogApp.Common.Contracts.Accessors
         /// <param name="tags"></param>
         /// <returns></returns>
         Task<IEnumerable<Tag>> AddTags(IEnumerable<Tag> tags);
+
+        /// <summary>
+        /// Will retrieve the body for a header by id
+        /// </summary>
+        /// <param name="bodyId"></param>
+        /// <returns></returns>
+        Task<Post> GetPostById(int bodyId);
     }
 }

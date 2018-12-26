@@ -113,6 +113,21 @@ namespace BlogApp.Accessors
                 }
             }
         }
+
+        public async Task<Post> GetPostById(int bodyId)
+        {
+            using (var ctx = new BlogContext(_opt))
+            {
+                var header = await ctx.Headers
+                    .Include(e => e.Body)
+                    .Include(e => e.PostTags)
+                    .ThenInclude(e => e.Tag)
+                    .Where(e => e.BodyId == bodyId)
+                    .FirstOrDefaultAsync();
+
+                return header.Body.Convert(header);
+            }
+        }
     }
 }
 
