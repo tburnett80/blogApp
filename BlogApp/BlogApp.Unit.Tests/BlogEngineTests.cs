@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using BlogApp.Common.Contracts.Accessors;
 using BlogApp.Common.Models;
@@ -16,7 +15,57 @@ namespace BlogApp.Unit.Tests
     {
         [TestMethod]
         [TestCategory("Unit Test")]
-        public async Task GetHeaderPageNoCacheTest()
+        public async Task GetHeadersPageNoDataTest()
+        {
+            //Arrange
+            var mockCache = new Mock<ICacheAccessor>();
+            var mockDb = new Mock<IBlogAccessor>();
+
+            mockDb.Setup(m => m.GetPostHeadersByPage(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(() => new PostHeader[0]);
+
+            var engine = new BlogEngine(mockDb.Object, mockCache.Object);
+
+            //Act
+            var results = await engine.GetPageOfHeaders(0, 2);
+
+            //Assert
+            Assert.IsNotNull(results, "Should never be null");
+            Assert.IsInstanceOfType(results, typeof(IEnumerable<PostHeader>));
+            Assert.IsFalse(results.Any(), "Should be no headers on this page");
+
+            mockCache.Verify(m => 
+                m.CacheEnt(It.IsAny<string>(), It.IsAny<IEnumerable<PostHeader>>(), It.IsAny<TimeSpan?>()), 
+                Times.Never, "Should be skipped because of null");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Test")]
+        public async Task GetHeadersPageNullDataTest()
+        {
+            //Arrange
+            var mockCache = new Mock<ICacheAccessor>();
+            var mockDb = new Mock<IBlogAccessor>();
+
+            mockDb.Setup(m => m.GetPostHeadersByPage(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            var engine = new BlogEngine(mockDb.Object, mockCache.Object);
+
+            //Act
+            var results = await engine.GetPageOfHeaders(0, 2);
+
+            //Assert
+            Assert.IsNull(results, "Should be null");
+
+            mockCache.Verify(m =>
+                m.CacheEnt(It.IsAny<string>(), It.IsAny<IEnumerable<PostHeader>>(), It.IsAny<TimeSpan?>()),
+                Times.Never, "Should be skipped because of null");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Test")]
+        public async Task GetHeadersPageNoCacheTest()
         {
             //Arrange
             var mockCache = new Mock<ICacheAccessor>();
@@ -74,6 +123,79 @@ namespace BlogApp.Unit.Tests
             Assert.IsNotNull(results, "Should never be null");
             Assert.IsInstanceOfType(results, typeof(IEnumerable<PostHeader>));
             Assert.AreEqual(2, results.Count(), "Should be two headers on this page");
+
+            mockCache.Verify(m =>
+                m.CacheEnt<IEnumerable<PostHeader>>(It.IsAny<string>(), It.IsAny<IEnumerable<PostHeader>>(), It.IsAny<TimeSpan?>()),
+                Times.Once, "Should be called once to cache results");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Test")]
+        public async Task GetHeadersPageCachedTest()
+        {
+            //Arrange
+            var mockCache = new Mock<ICacheAccessor>();
+            var mockDb = new Mock<IBlogAccessor>();
+
+            mockCache.Setup(m => m.GetEnt<IEnumerable<PostHeader>>(It.IsAny<string>()))
+                .ReturnsAsync(() => new[]
+                {
+                    new PostHeader
+                    {
+                        BodyId = 1,
+                        Id = 1,
+                        Title = TestConstants.GuidString,
+                        Tags = new []
+                        {
+                            new Tag
+                            {
+                                Id = 1,
+                                Text = TestConstants.GuidString
+                            },
+                            new Tag
+                            {
+                                Id = 2,
+                                Text = TestConstants.GuidString
+                            }
+                        }
+                    },
+                    new PostHeader
+                    {
+                        BodyId = 2,
+                        Id = 2,
+                        Title = TestConstants.GuidString,
+                        Tags = new []
+                        {
+                            new Tag
+                            {
+                                Id = 3,
+                                Text = TestConstants.GuidString
+                            },
+                            new Tag
+                            {
+                                Id = 4,
+                                Text = TestConstants.GuidString
+                            }
+                        }
+                    },
+                });
+
+            var engine = new BlogEngine(mockDb.Object, mockCache.Object);
+
+            //Act
+            var results = await engine.GetPageOfHeaders(0, 2);
+
+            //Assert
+            Assert.IsNotNull(results, "Should never be null");
+            Assert.IsInstanceOfType(results, typeof(IEnumerable<PostHeader>));
+            Assert.AreEqual(2, results.Count(), "Should be two headers on this page");
+
+            mockDb.Verify(m => m.GetPostHeadersByPage(It.IsAny<int>(), It.IsAny<int>()),
+                Times.Never, "Should never reach db because results were cached.");
+
+            mockCache.Verify(m =>
+                m.CacheEnt<IEnumerable<PostHeader>>(It.IsAny<string>(), It.IsAny<IEnumerable<PostHeader>>(), It.IsAny<TimeSpan?>()),
+                Times.Never, "Should have bailed before getting here");
         }
     }
 }

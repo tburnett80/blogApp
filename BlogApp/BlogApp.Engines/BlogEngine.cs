@@ -35,7 +35,7 @@ namespace BlogApp.Engines
                 return cached;
 
             var headers = await _dbAccessor.GetPostHeadersByPage(pageNumber, countPerPage);
-            if(headers.Any())
+            if(headers != null && headers.Any())
                 await _cacheAccessor.CacheEnt(cacheKey, headers);
 
             return headers;
