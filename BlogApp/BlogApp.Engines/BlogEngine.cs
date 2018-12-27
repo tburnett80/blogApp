@@ -40,5 +40,20 @@ namespace BlogApp.Engines
 
             return headers;
         }
+
+        public async Task<IEnumerable<PostHeader>> GetPageOfHeadersByTag(int pageNumber, int countPerPage, string tag)
+        {
+            var cacheKey = $"Headers::{tag}::{countPerPage}::{pageNumber}";
+            var cached = await _cacheAccessor.GetEnt<IEnumerable<PostHeader>>(cacheKey);
+
+            if (cached != null && cached.Any())
+                return cached;
+
+            var headers = await _dbAccessor.GetPostHeaderPageByTag(pageNumber, countPerPage, tag);
+            if (headers != null && headers.Any())
+                await _cacheAccessor.CacheEnt(cacheKey, headers);
+
+            return headers;
+        }
     }
 }
