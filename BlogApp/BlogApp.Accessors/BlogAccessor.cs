@@ -42,6 +42,7 @@ namespace BlogApp.Accessors
                 var headers = await ctx.Headers
                     .Include(e => e.PostTags)
                     .ThenInclude(e => e.Tag)
+                    .OrderByDescending(e => e.Id)
                     .Skip(pageNumber * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -58,6 +59,7 @@ namespace BlogApp.Accessors
                     .Include(e => e.PostTags)
                     .ThenInclude(e => e.Tag)
                     .Where(e => e.PostTags.Any(t => t.Tag.Text.Equals(tag)))
+                    .OrderByDescending(e => e.Id)
                     .Skip(pageNumber * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

@@ -29,9 +29,24 @@ namespace BlogApp.Managers
         }
         #endregion
 
+        public async Task<IEnumerable<MetaTag>> GetTagList()
+        {
+            return await _blogEngine.GetTagList();
+        }
+
         public async Task<IEnumerable<PostHeader>> GetPageOfHeaders(int pageNum)
         {
             return await _blogEngine.GetPageOfHeaders(pageNum, int.Parse(_config["PageSize"]));
+        }
+
+        public async Task<IEnumerable<PostHeader>> GetTaggedPageOfHeaders(int pageNum, string tag)
+        {
+            return await _blogEngine.GetPageOfHeadersByTag(pageNum, int.Parse(_config["PageSize"]), tag);
+        }
+
+        public async Task<Post> GetPostBodyById(int bodyId)
+        {
+            return await _dbAccessor.GetPostById(bodyId);
         }
     }
 }

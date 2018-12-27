@@ -6,7 +6,7 @@ namespace BlogApp.Accessors.Tests
 {
     internal static class TestConstants
     {
-        public static string Server => "192.168.1.1"; //"10.200.7.50"
+        public static string Server => "10.200.7.33"; //"10.200.7.33"
 
         public static string GuidString => $"{Guid.NewGuid().ToString().Replace("-", "")}";
     }

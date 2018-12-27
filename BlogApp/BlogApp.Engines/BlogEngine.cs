@@ -26,6 +26,21 @@ namespace BlogApp.Engines
         }
         #endregion
 
+        public async Task<IEnumerable<MetaTag>> GetTagList()
+        {
+            var cacheKey = $"TagList";
+            var cached = await _cacheAccessor.GetEnt<IEnumerable<MetaTag>>(cacheKey);
+
+            if (cached != null && cached.Any())
+                return cached;
+
+            var tags = await _dbAccessor.GetTagList();
+            if(tags != null && tags.Any())
+                await _cacheAccessor.CacheEnt(cacheKey, tags);
+
+            return tags;
+        }
+
         public async Task<IEnumerable<PostHeader>> GetPageOfHeaders(int pageNumber, int countPerPage)
         {
             var cacheKey = $"Headers::{countPerPage}::{pageNumber}";

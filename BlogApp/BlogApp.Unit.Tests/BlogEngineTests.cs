@@ -382,5 +382,120 @@ namespace BlogApp.Unit.Tests
                 m.CacheEnt<IEnumerable<PostHeader>>(It.IsAny<string>(), It.IsAny<IEnumerable<PostHeader>>(), It.IsAny<TimeSpan?>()),
                 Times.Never, "Should have bailed before getting here");
         }
+
+        [TestMethod]
+        [TestCategory("Unit Test")]
+        public async Task GetTagsNoDataTest()
+        {
+            //Arrange
+            var mockCache = new Mock<ICacheAccessor>();
+            var mockDb = new Mock<IBlogAccessor>();
+
+            mockDb.Setup(m => m.GetTagList())
+                .ReturnsAsync(() => new MetaTag[0]);
+
+            var engine = new BlogEngine(mockDb.Object, mockCache.Object);
+
+            //Act
+            var results = await engine.GetTagList();
+
+            //Assert
+            Assert.IsNotNull(results, "Should never be null");
+            Assert.IsInstanceOfType(results, typeof(IEnumerable<MetaTag>));
+            Assert.IsFalse(results.Any(), "Should be no tags");
+
+            mockCache.Verify(m => 
+                m.CacheEnt(It.IsAny<string>(), It.IsAny<IEnumerable<MetaTag>>(), It.IsAny<TimeSpan?>()), 
+                Times.Never, "Should be skipped because of null");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Test")]
+        public async Task GetTagsNullDataTest()
+        {
+            //Arrange
+            var mockCache = new Mock<ICacheAccessor>();
+            var mockDb = new Mock<IBlogAccessor>();
+
+            mockDb.Setup(m => m.GetTagList())
+                .ReturnsAsync(() => null);
+
+            var engine = new BlogEngine(mockDb.Object, mockCache.Object);
+
+            //Act
+            var results = await engine.GetTagList();
+
+            //Assert
+            Assert.IsNull(results, "Should be null");
+
+            mockCache.Verify(m =>
+                m.CacheEnt(It.IsAny<string>(), It.IsAny<IEnumerable<MetaTag>>(), It.IsAny<TimeSpan?>()),
+                Times.Never, "Should be skipped because of null");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Test")]
+        public async Task GetTagsNoCacheTest()
+        {
+            //Arrange
+            var mockCache = new Mock<ICacheAccessor>();
+            var mockDb = new Mock<IBlogAccessor>();
+
+            mockDb.Setup(m => m.GetTagList())
+                .ReturnsAsync(() => new[]
+                {
+                    new MetaTag { Count = 3, Tag = TestConstants.GuidString }, 
+                    new MetaTag { Count = 1, Tag = TestConstants.GuidString }, 
+                    new MetaTag { Count = 2, Tag = TestConstants.GuidString }
+                });
+
+            var engine = new BlogEngine(mockDb.Object, mockCache.Object);
+
+            //Act
+            var results = await engine.GetTagList();
+
+            //Assert
+            Assert.IsNotNull(results, "Should never be null");
+            Assert.IsInstanceOfType(results, typeof(IEnumerable<MetaTag>));
+            Assert.AreEqual(3, results.Count(), "Should be three tags");
+
+            mockCache.Verify(m =>
+                m.CacheEnt<IEnumerable<MetaTag>>(It.IsAny<string>(), It.IsAny<IEnumerable<MetaTag>>(), It.IsAny<TimeSpan?>()),
+                Times.Once, "Should be called once to cache results");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Test")]
+        public async Task GetTagsCachedTest()
+        {
+            //Arrange
+            var mockCache = new Mock<ICacheAccessor>();
+            var mockDb = new Mock<IBlogAccessor>();
+
+            mockCache.Setup(m => m.GetEnt<IEnumerable<MetaTag>>(It.IsAny<string>()))
+                .ReturnsAsync(() => new[]
+                {
+                    new MetaTag { Count = 3, Tag = TestConstants.GuidString }, 
+                    new MetaTag { Count = 1, Tag = TestConstants.GuidString }, 
+                    new MetaTag { Count = 2, Tag = TestConstants.GuidString }
+                });
+
+            var engine = new BlogEngine(mockDb.Object, mockCache.Object);
+
+            //Act
+            var results = await engine.GetTagList();
+
+            //Assert
+            Assert.IsNotNull(results, "Should never be null");
+            Assert.IsInstanceOfType(results, typeof(IEnumerable<MetaTag>));
+            Assert.AreEqual(3, results.Count(), "Should be three tags");
+
+            mockDb.Verify(m => m.GetTagList(),
+                Times.Never, "Should never reach db because results were cached.");
+
+            mockCache.Verify(m =>
+                m.CacheEnt<IEnumerable<MetaTag>>(It.IsAny<string>(), It.IsAny<IEnumerable<MetaTag>>(), It.IsAny<TimeSpan?>()),
+                Times.Never, "Should have bailed before getting here");
+        }
     }
 }
