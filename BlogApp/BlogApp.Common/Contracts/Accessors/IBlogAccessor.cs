@@ -18,7 +18,16 @@ namespace BlogApp.Common.Contracts.Accessors
         /// <param name="pageNumber">Page number to retrieve</param>
         /// <param name="pageSize">Number of items in a page</param>
         /// <returns></returns>
-        Task<IEnumerable<PostHeader>> GetPostHeadersByPage(int pageNumber = 0, int pageSize = 10);
+        Task<IEnumerable<PostHeader>> GetPostHeadersByPage(int pageNumber, int pageSize);
+
+        /// <summary>
+        /// Get Paged results of post headers filtered by a tag
+        /// </summary>
+        /// <param name="pageNumber">Page number to retrieve</param>
+        /// <param name="pageSize">Number of items in a page</param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        Task<IEnumerable<PostHeader>> GetPostHeaderPageByTag(int pageNumber, int pageSize, string tag);
 
         /// <summary>
         /// Add an entire post object from Editor

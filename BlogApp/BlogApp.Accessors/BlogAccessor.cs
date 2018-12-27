@@ -35,13 +35,29 @@ namespace BlogApp.Accessors
             }
         }
 
-        public async Task<IEnumerable<PostHeader>> GetPostHeadersByPage(int pageNumber = 0, int pageSize = 10)
+        public async Task<IEnumerable<PostHeader>> GetPostHeadersByPage(int pageNumber, int pageSize)
         {
             using (var ctx = new BlogContext(_opt))
             {
                 var headers = await ctx.Headers
                     .Include(e => e.PostTags)
                     .ThenInclude(e => e.Tag)
+                    .Skip(pageNumber * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return headers.Convert();
+            }
+        }
+
+        public async Task<IEnumerable<PostHeader>> GetPostHeaderPageByTag(int pageNumber, int pageSize, string tag)
+        {
+            using (var ctx = new BlogContext(_opt))
+            {
+                var headers = await ctx.Headers
+                    .Include(e => e.PostTags)
+                    .ThenInclude(e => e.Tag)
+                    .Where(e => e.PostTags.Any(t => t.Tag.Text.Equals(tag)))
                     .Skip(pageNumber * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

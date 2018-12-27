@@ -184,6 +184,46 @@ namespace BlogApp.Accessors.Tests
 
         [TestMethod]
         [TestCategory("Integration Test")]
+        public async Task GetPagedHeadersByTagTest()
+        {
+            //Arrange
+            var accessor = new BlogAccessor(_opts);
+
+            var tagText = TestConstants.GuidString;
+            for (var ndx = 0; ndx < 5; ndx++)
+            {
+                await accessor.AddPost(new Post
+                {
+                    Body = TestConstants.GuidString,
+                    Header = new PostHeader
+                    {
+                        Title = TestConstants.GuidString,
+                        Tags = new[]
+                        {
+                            new Tag
+                            {
+                                Text = tagText
+                            },
+                            new Tag
+                            {
+                                Text = TestConstants.GuidString
+                            },
+                        }
+                    }
+                });
+            }
+
+            //Act
+            var result = await accessor.GetPostHeaderPageByTag(1, 2, tagText);
+
+            //Assert
+            Assert.IsNotNull(result, "Should never be null");
+            Assert.AreEqual(2, result.Count(), "Should contain 2 post headers from the second page matching the tag");
+            Assert.IsTrue(result.All(r => r.Tags.Any(t => t.Text.Equals(tagText))));
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Test")]
         public async Task GetPostTest()
         {
             //Arrange
