@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using BlogApp.Accessors.EF;
 using BlogApp.Accessors.Entities;
@@ -9,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BlogApp.Accessors.Tests
 {
     [TestClass]
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public class DbAccessorTests
     {
         private static DbContextOptions _opts;
@@ -214,6 +217,44 @@ namespace BlogApp.Accessors.Tests
             Assert.IsNotNull(result, "Should never be null");
             Assert.IsInstanceOfType(result, typeof(Post));
             Assert.AreEqual(bodyText, result.Body, "Should contain the test body text");
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Test")]
+        public async Task GetMetaTagsTest()
+        {
+            //Arrange
+            var tagText = TestConstants.GuidString;
+
+            using (var ctx = new BlogContext(_opts))
+            {
+                var tag = new TagEntity { Text = tagText };
+                var header = new PostHeaderEntity { Title = TestConstants.GuidString, Body = new PostBodyEntity { Markdown = TestConstants.GuidString }};
+                var header2 = new PostHeaderEntity { Title = TestConstants.GuidString, Body = new PostBodyEntity { Markdown = TestConstants.GuidString }};
+                await ctx.Tags.AddAsync(tag);
+                await ctx.Headers.AddAsync(header);
+                await ctx.Headers.AddAsync(header2);
+                await ctx.SaveChangesAsync();
+
+                await ctx.PostTags.AddAsync(new PostTagEntity {PostId = header.Id, TagId = tag.Id});
+                await ctx.PostTags.AddAsync(new PostTagEntity {PostId = header2.Id, TagId = tag.Id});
+                await ctx.SaveChangesAsync();
+            }
+
+            var accessor = new BlogAccessor(_opts);
+
+            //Act
+            var results = await accessor.GetTagList();
+            var match = results.FirstOrDefault(t => t.Tag.Equals(tagText));
+
+            //Assert
+            Assert.IsNotNull(results, "Should never be null");
+            Assert.IsInstanceOfType(results, typeof(IEnumerable<MetaTag>));
+            Assert.IsTrue(results.Any());
+            Assert.IsNotNull(match, "Should be at least one match");
+            Assert.IsInstanceOfType(match, typeof(MetaTag));
+            Assert.AreEqual(2, match.Count, "Should be equal");
+            Assert.AreEqual(tagText, match.Tag, "Should be equal");
         }
     }
 }

@@ -42,5 +42,11 @@ namespace BlogApp.Common.Contracts.Accessors
         /// <param name="bodyId"></param>
         /// <returns></returns>
         Task<Post> GetPostById(int bodyId);
+
+        /// <summary>
+        /// Gets list of tags and the post counts for each
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<MetaTag>> GetTagList();
     }
 }

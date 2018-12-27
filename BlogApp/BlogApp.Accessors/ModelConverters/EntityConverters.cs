@@ -63,5 +63,22 @@ namespace BlogApp.Accessors.ModelConverters
                 Body = ent.Markdown
             };
         }
+
+        internal static IEnumerable<MetaTag> Convert(this IEnumerable<MetaTagEntity> ents)
+        {
+            return ents.Select(t => t.Convert());
+        }
+
+        internal static MetaTag Convert(this MetaTagEntity ent)
+        {
+            if (ent == null)
+                return null;
+
+            return new MetaTag
+            {
+                Tag = ent.Tag,
+                Count = ent.Count
+            };
+        }
     }
 }

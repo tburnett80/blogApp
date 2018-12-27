@@ -128,6 +128,18 @@ namespace BlogApp.Accessors
                 return header.Body.Convert(header);
             }
         }
+
+        public async Task<IEnumerable<MetaTag>> GetTagList()
+        {
+            using (var ctx = new BlogContext(_opt))
+            {
+                var tags = await ctx.MetaTags
+                    .FromSql("SELECT DISTINCT t.tag_text as Tag, (SELECT COUNT(*) from post_tags where tag_id = pt.tag_id) as Count FROM tags t JOIN post_tags pt on t.id = pt.tag_id")
+                    .ToListAsync();
+
+                return tags.Convert();
+            }
+        }
     }
 }
 
