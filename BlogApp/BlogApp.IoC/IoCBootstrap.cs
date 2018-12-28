@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BlogApp.Accessors;
+﻿using BlogApp.Accessors;
 using BlogApp.Common.Contracts.Accessors;
+using BlogApp.Common.Contracts.Engines;
+using BlogApp.Common.Contracts.Managers;
+using BlogApp.Engines;
+using BlogApp.Managers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,18 +17,23 @@ namespace BlogApp.IoC
             //Config options
             var ctxConn = new DbContextOptionsBuilder();
             ctxConn.UseNpgsql(configuration["DbConnStr"]);
-            //ctxConn.UseSqlServer(configuration["ConnStr"]);
 
-            //TODO: shut off before v1
-            ctxConn.EnableSensitiveDataLogging();
+            if(bool.Parse(configuration["SensDbLogging"]))
+                ctxConn.EnableSensitiveDataLogging();
+
             services.AddSingleton(ctxConn.Options);
+            services.AddSingleton<IConfiguration>(configuration);
 
             //Accessors
+            services.AddSingleton<ICacheAccessor, BlogCacheAccessor>();
             services.AddScoped<IBlogAccessor, BlogAccessor>();
+            services.AddScoped<IBlobAccessor, BlogBlobAccessor>();
 
-            //TODO: Add engines
+            //Engines
+            services.AddScoped<IBlogEngine, BlogEngine>();
 
-            //TODO: Add managers
+            //Managers
+            services.AddScoped<IBlogPostManager, BlogPostManager>();
         }
     }
 }
