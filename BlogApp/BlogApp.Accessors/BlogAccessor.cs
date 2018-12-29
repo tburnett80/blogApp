@@ -27,6 +27,14 @@ namespace BlogApp.Accessors
         }
         #endregion
 
+        public async Task EnsureCreated()
+        {
+            using (var ctx = new BlogContext(_opt))
+            {
+                await ctx.Database.EnsureCreatedAsync();
+            }
+        }
+
         public async Task<int> GetPostCount()
         {
             using (var ctx = new BlogContext(_opt))

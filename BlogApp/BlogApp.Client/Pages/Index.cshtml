@@ -1,7 +1,57 @@
-﻿@page "/"
+﻿@using BlogApp.Shared
+@page "/"
+@layout BlogLayout
+@inject HttpClient Http
 
-<h1>Hello, world!</h1>
+<h1>Blog!</h1>
 
-Welcome to your new app.
+<div>
+    @if (tags == null)
+    {
+        <span><em>Loading Tags...</em></span>
+    }
+    else
+    {
+        @foreach (var tag in tags)
+         {
+             <span>@tag.Tag</span>
+         }
+    }
+</div>
+<br />
+<div></div>
+<div>
+    @if (headers == null)
+    {
+        <div><em>Loading Headers...</em></div>
+    }
+    else
+    {
+        @foreach (var header in headers)
+         {
+             <div>
+                 <div>@header.Title</div>
+                 <div>
+                     Tags:
+                     @foreach (var t in header.Tags)
+                     {
+                         <span>@t</span>
+                     }
+                 </div>
+             </div>
+         }
+    }
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+@functions
+{
+    MetaTagViewModel[] tags;
+    HeaderViewModel[] headers;
+
+    protected override async Task OnInitAsync()
+    {
+        tags = await Http.GetJsonAsync<MetaTagViewModel[]>("blog/tags/v1");
+        headers = await Http.GetJsonAsync<HeaderViewModel[]>("blog/headers/page/v1/0");
+    }
+}

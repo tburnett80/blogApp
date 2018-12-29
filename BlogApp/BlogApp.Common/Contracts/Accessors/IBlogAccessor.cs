@@ -6,6 +6,8 @@ namespace BlogApp.Common.Contracts.Accessors
 {
     public interface IBlogAccessor
     {
+        Task EnsureCreated();
+
         /// <summary>
         /// Gets count of posts
         /// </summary>

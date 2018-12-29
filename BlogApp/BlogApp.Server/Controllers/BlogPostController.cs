@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BlogApp.Common.Contracts.Managers;
+using BlogApp.Server.ModelMappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogApp.Server.Controllers
@@ -22,7 +23,16 @@ namespace BlogApp.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTags()
         {
-            return Ok(await _manager.GetTagList());
+            var dtos = await _manager.GetTagList();
+            return Ok(dtos.Convert());
+        }
+
+        [Route("blog/headers/page/v1/{pageNum}")]
+        [HttpGet]
+        public async Task<IActionResult> GetHeaders(int pageNum)
+        {
+            var dtos = await _manager.GetPageOfHeaders(pageNum);
+            return Ok(dtos.Convert());
         }
     }
 }

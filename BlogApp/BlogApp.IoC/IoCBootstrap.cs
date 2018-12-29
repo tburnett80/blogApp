@@ -2,6 +2,7 @@
 using BlogApp.Common.Contracts.Accessors;
 using BlogApp.Common.Contracts.Engines;
 using BlogApp.Common.Contracts.Managers;
+using BlogApp.Common.Models;
 using BlogApp.Engines;
 using BlogApp.Managers;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,19 @@ namespace BlogApp.IoC
 
             //Managers
             services.AddScoped<IBlogPostManager, BlogPostManager>();
+        }
+
+        public static void CreateDb(this IServiceCollection services)
+        {
+            var provider = services.BuildServiceProvider();
+            var creator = provider.GetService<IBlogAccessor>();
+            creator.EnsureCreated().Wait();
+
+            creator.AddTags(new[]
+            {
+                new Tag { Text = "Test1" },
+                new Tag { Text = "Test2" },
+            }).Wait();
         }
     }
 }
